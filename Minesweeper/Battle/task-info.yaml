@@ -552,5 +552,26 @@ files:
     }
   learner_created: false
 feedback_link: https://hyperskill.org/learn/step/7690#comment
-status: Unchecked
+status: Failed
+feedback:
+  message: "Wrong answer in test #3\n\nGrid&#39;s cell at coordinates &quot;9 4&quot;\
+    \ should be equal to &quot;.&quot;\n\nPlease find below the output of your program\
+    \ during this failed test.\nNote that the &#39;&gt;&#39; character indicates the\
+    \ beginning of the input line.\n\n---\n\nHow many mines do you want on the field?\
+    \ \n&gt; 1\n │123456789│\n—│—————————│\n1│.........│\n2│.........│\n3│.........│\
+    \n4│.........│\n5│.........│\n6│.........│\n7│.........│\n8│.........│\n9│.........│\
+    \n—│—————————│\nSet/unset mine marks or claim a cell as free: \n&gt; 1 9 mine\n\
+    \ │123456789│\n—│—————————│\n1│.........│\n2│.........│\n3│.........│\n4│.........│\
+    \n5│.........│\n6│.........│\n7│.........│\n8│.........│\n9│*........│\n—│————\
+    —————│\nSet/unset mine marks or claim a cell as free: \n&gt; 4 2 free\n │123456789│\
+    \n—│—————————│\n1│/////////│\n2│/////////│\n3│//////111│\n4│//////1..│\n5│//////111│\
+    \n6│/////////│\n7│/////////│\n8│/////////│\n9│/////////│\n—│—————————│\nSet/unset\
+    \ mine marks or claim a cell as free: \n&gt; 9 4 mine\n │123456789│\n—│———————\
+    ——│\n1│/////////│\n2│/////////│\n3│//////111│\n4│//////1.*│\n5│//////111│\n6│\
+    /////////│\n7│/////////│\n8│/////////│\n9│/////////│\n—│—————————│\nSet/unset\
+    \ mine marks or claim a cell as free: \n&gt; 9 4 mine\nThere is a number here!\n\
+    \ │123456789│\n—│—————————│\n1│/////////│\n2│/////////│\n3│//////111│\n4│//////1.1│\
+    \n5│//////111│\n6│/////////│\n7│/////////│\n8│/////////│\n9│/////////│\n—│————\
+    —————│\nSet/unset mine marks or claim a cell as free:"
+  time: "Tue, 08 Nov 2022 15:20:34 UTC"
 record: -1

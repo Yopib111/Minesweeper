@@ -19,13 +19,13 @@ fun main() {
     printHiddenBoard()
 
 // копируею данные из основного массива в скрытый кроме Х
-    for (i in 0..8) {
-        for (j in 0..8) {
-            if (board[i][j] == 'X') hiddenBoard[i][j] = '.'
-            if (board[i][j].isDigit()) hiddenBoard[i][j] = board[i][j]
-
-        }
-    }
+//    for (i in 0..8) {
+//        for (j in 0..8) {
+//            if (board[i][j] == 'X') hiddenBoard[i][j] = '.'
+//            if (board[i][j].isDigit()) hiddenBoard[i][j] = board[i][j]
+//
+//        }
+//    }
 
     do {
         println("Set/unset mine marks or claim a cell as free: ")
@@ -37,18 +37,28 @@ fun main() {
             }
             "free" -> {
                 if (board[readCoordinateY.toInt()-1][readCoordinateX.toInt()-1] == 'X') {
+                    showAllMines()
+                    printHiddenBoard()
                     println("You stepped on a mine and failed! ")
+                    break
                 } else {
                     checkEmptySlots(readCoordinateY.toInt()-1, readCoordinateX.toInt()-1)
+                    if (countDotsMines() == 1) {
+                        printHiddenBoard()
+                        println("Congratulations! You found all the mines!")
+                        break
+                    }
                     printHiddenBoard()
+//                    printBoard()
+
                 }
             }
         }
-
         checkEmptySlots(readCoordinateY.toInt()-1, readCoordinateX.toInt()-1)
-
     } while ((correckMines != mines) || (closedMinesLeft != correckMines))
-    println("Congratulations! You found all the mines!")
+
+if ((correckMines == mines) && (closedMinesLeft == correckMines)) println("Congratulations! You found all the mines!")
+
 }
 fun printBoard() {
     println("""
@@ -351,70 +361,135 @@ fun digitCount() {
 }
 
 fun setDelMinesMarks(coordinateY: Int, coordinateX: Int) {
-    if (board[coordinateY][coordinateX] == 'X') {
-        hiddenBoard[coordinateY][coordinateX] = '*'
-        closedMinesLeft++
-        correckMines++
-    } else if (board[coordinateY][coordinateX].isDigit()) {
-        println("There is a number here!")
-    } else if (hiddenBoard[coordinateY][coordinateX] == '*') {
+    if (hiddenBoard[coordinateY][coordinateX] == '*') {
         hiddenBoard[coordinateY][coordinateX] = '.'
         closedMinesLeft--
-    }
-    else {
+    } else if (hiddenBoard[coordinateY][coordinateX] == '.') {
         hiddenBoard[coordinateY][coordinateX] = '*'
         closedMinesLeft++
+        if (board[coordinateY][coordinateX] == 'X') correckMines++
+    } else if  (hiddenBoard[coordinateY][coordinateX].isDigit()) {
+        println("There is a number here!")
     }
+//
+//    if (board[coordinateY][coordinateX] == 'X') {
+//        hiddenBoard[coordinateY][coordinateX] = '*'
+//        closedMinesLeft++
+//        correckMines++
+//    } else if (hiddenBoard[coordinateY][coordinateX].isDigit()) {
+//        println("There is a number here!")
+//    } else if (hiddenBoard[coordinateY][coordinateX] == '*') {
+//        hiddenBoard[coordinateY][coordinateX] = '.'
+//        closedMinesLeft--
+//    }
+//    else {
+//        hiddenBoard[coordinateY][coordinateX] = '*'
+//        closedMinesLeft++
+//    }
 
 }
 
 fun checkEmptySlots(coordinateY: Int, coordinateX: Int) {
     if (board[coordinateY][coordinateX] == '.') {
+        board[coordinateY][coordinateX] = '/'
         hiddenBoard[coordinateY][coordinateX] = '/'
 
         for (i in coordinateX downTo 1) {
-            if (hiddenBoard[coordinateY][i-1] == '.' && hiddenBoard[coordinateY][i] == '/') {
+            if (board[coordinateY][i-1] == '.' && board[coordinateY][i] == '/') {
+                board[coordinateY][i-1] = '/'
                 hiddenBoard[coordinateY][i-1] = '/'
             }
-            if (coordinateY > 0 && hiddenBoard[coordinateY-1][coordinateX] == '.') hiddenBoard[coordinateY-1][coordinateX] = '/'
-            if (coordinateY < 8 && hiddenBoard[coordinateY+1][coordinateX] == '.') hiddenBoard[coordinateY+1][coordinateX] = '/'
+            if (coordinateY > 0 && board[coordinateY-1][coordinateX] == '.') {
+                hiddenBoard[coordinateY-1][coordinateX] = '/'
+                board[coordinateY-1][coordinateX] = '/'
+            }
+            if (coordinateY < 8 && board[coordinateY+1][coordinateX] == '.') {
+                hiddenBoard[coordinateY+1][coordinateX] = '/'
+                board[coordinateY+1][coordinateX] = '/'
+            }
         }
         for (i in coordinateX..7) {
-            if (hiddenBoard[coordinateY][i+1] == '.' && hiddenBoard[coordinateY][i] == '/') {
+            if (board[coordinateY][i+1] == '.' && board[coordinateY][i] == '/') {
                 hiddenBoard[coordinateY][i+1] = '/'
+                board[coordinateY][i+1] = '/'
             }
-            if (coordinateY > 0 && hiddenBoard[coordinateY-1][coordinateX] == '.') hiddenBoard[coordinateY-1][coordinateX] = '/'
-            if (coordinateY < 8 && hiddenBoard[coordinateY+1][coordinateX] == '.') hiddenBoard[coordinateY+1][coordinateX] = '/'
+            if (coordinateY > 0 && board[coordinateY-1][coordinateX] == '.') {
+                hiddenBoard[coordinateY-1][coordinateX] = '/'
+                board[coordinateY-1][coordinateX] = '/'
+            }
+            if (coordinateY < 8 && board[coordinateY+1][coordinateX] == '.') {
+                hiddenBoard[coordinateY+1][coordinateX] = '/'
+                board[coordinateY+1][coordinateX] = '/'
+            }
         }
-
-        for (y in coordinateY downTo 0) {
-            repeat(9) {
-                for (x in 0.. 8) {
-                    if (x < 8 && hiddenBoard[y][x] == '.' && hiddenBoard[y][x+1] == '/' ||
-                        x > 0 && hiddenBoard[y][x] == '.' && hiddenBoard[y][x-1] == '/' ||
-                        y > 0 && hiddenBoard[y][x] == '.' && hiddenBoard[y-1][x] == '/' ||
-                        y < 8 && hiddenBoard[y][x] == '.' && hiddenBoard[y+1][x] == '/') {
-                        hiddenBoard[y][x] = '/'
+        repeat(9) {
+            for (y in coordinateY downTo 0) {
+                repeat(9) {
+                    for (x in 0..8) {
+                        if (x < 8 && board[y][x] == '.' && board[y][x + 1] == '/' ||
+                            x > 0 && board[y][x] == '.' && board[y][x - 1] == '/' ||
+                            y > 0 && board[y][x] == '.' && board[y - 1][x] == '/' ||
+                            y < 8 && board[y][x] == '.' && board[y + 1][x] == '/'
+                        ) {
+                            hiddenBoard[y][x] = '/'
+                            board[y][x] = '/'
+                        }
                     }
                 }
             }
-        }
 
-        for (y in coordinateY .. 8) {
-            repeat(9) {
-                for (x in 0.. 8) {
-                    if (x < 8 && hiddenBoard[y][x] == '.' && hiddenBoard[y][x+1] == '/' ||
-                        x > 0 && hiddenBoard[y][x] == '.' && hiddenBoard[y][x-1] == '/' ||
+            for (y in coordinateY..8) {
+                repeat(9) {
+                    for (x in 0..8) {
+                        if (x < 8 && board[y][x] == '.' && board[y][x + 1] == '/' ||
+                            x > 0 && board[y][x] == '.' && board[y][x - 1] == '/' ||
 //                        x == 8 && hiddenBoard[y][x] == '.' && hiddenBoard[y][x-1] == '/' ||
-                        y > 0 && hiddenBoard[y][x] == '.' && hiddenBoard[y-1][x] == '/' ||
-                        y < 8 && hiddenBoard[y][x] == '.' && hiddenBoard[y+1][x] == '/'
+                            y > 0 && board[y][x] == '.' && board[y - 1][x] == '/' ||
+                            y < 8 && board[y][x] == '.' && board[y + 1][x] == '/'
 //                        y == 0 && hiddenBoard[y][x] == '.' && hiddenBoard[y+1][x] == '/'
-                    ) {
-                        hiddenBoard[y][x] = '/'
+                        ) {
+                            hiddenBoard[y][x] = '/'
+                            board[y][x] = '/'
+                        }
                     }
                 }
             }
         }
+//      сразу после проверки расставляем цифры возле /
+        for (y in 0..8) {
+            for (x in 0..8) {
+                if (board[y][x] == '/') {
+                    if (x < 8 && board[y][x+1].isDigit()) hiddenBoard[y][x+1] = board[y][x+1]
+                    if (x > 0 && board[y][x-1].isDigit()) hiddenBoard[y][x-1] = board[y][x-1]
+                    if (y < 8 && board[y+1][x].isDigit()) hiddenBoard[y+1][x] = board[y+1][x]
+                    if (y > 0 && board[y-1][x].isDigit()) hiddenBoard[y-1][x] = board[y-1][x]
+                    if (x < 8 && y < 8 && board[y+1][x+1].isDigit()) hiddenBoard[y+1][x+1] = board[y+1][x+1]
+                    if (x > 0 && y > 0 && board[y-1][x-1].isDigit()) hiddenBoard[y-1][x-1] = board[y-1][x-1]
+                    if (x < 8 && y > 0 && board[y-1][x+1].isDigit()) hiddenBoard[y-1][x+1] = board[y-1][x+1]
+                    if (x > 0 && y < 8 && board[y+1][x-1].isDigit()) hiddenBoard[y+1][x-1] = board[y+1][x-1]
 
+                }
+            }
+        }
+    } else if (board[coordinateY][coordinateX].isDigit()) hiddenBoard[coordinateY][coordinateX] = board[coordinateY][coordinateX]
+
+}
+
+fun showAllMines(){
+    for (y in 0..8) {
+        for (x in 0..8) {
+            if (board[y][x] == 'X') hiddenBoard[y][x] = board[y][x]
+
+        }
     }
+}
+
+fun countDotsMines(): Int {
+    var countDots = 0
+    for (i in 0..8) {
+        for (j in 0..8) {
+            if (hiddenBoard[i][j] == '.') countDots ++
+        }
+    }
+    if (countDots == mines) return 1 else return 0
 }
